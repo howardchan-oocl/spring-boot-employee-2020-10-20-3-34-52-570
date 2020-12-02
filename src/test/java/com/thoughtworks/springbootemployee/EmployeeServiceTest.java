@@ -27,4 +27,20 @@ public class EmployeeServiceTest {
         //then
         assertEquals(expected,employees);
     }
+
+    @Test
+    public void should_return_a_employee_when_get_one_given_all_employees() {
+        //given
+        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
+        EmployeeService employeeService = new EmployeeService(employeeRepository);
+        Employee expected = new Employee(1, "test", 18, "male", 10000);
+
+        when(employeeRepository.findOne(1)).thenReturn(expected);
+
+        //when
+        Employee employees = employeeService.findOne(1);
+
+        //then
+        assertEquals(expected,employees);
+    }
 }
