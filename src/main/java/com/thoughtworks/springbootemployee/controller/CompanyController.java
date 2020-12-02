@@ -26,6 +26,13 @@ public class CompanyController {
         return targetCompany == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(targetCompany);
     }
 
+    @GetMapping("/{index}/employees")
+    public ResponseEntity<List<Employee>> getEmployeesOfOneCompany(@PathVariable Integer index) {
+        List<Employee> employees = this.companies.get(index).getEmployees();
+
+        return ResponseEntity.ok(employees);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Company create(@RequestBody Company company) {
