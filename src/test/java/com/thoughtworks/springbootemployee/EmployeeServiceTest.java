@@ -5,6 +5,7 @@ import com.thoughtworks.springbootemployee.service.EmployeeService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class EmployeeServiceTest {
         List<Employee> employees = employeeService.findAll();
 
         //then
-        assertEquals(expected,employees);
+        assertEquals(expected, employees);
     }
 
     @Test
@@ -35,13 +36,13 @@ public class EmployeeServiceTest {
         EmployeeService employeeService = new EmployeeService(employeeRepository);
         Employee expected = new Employee(1, "test", 18, "male", 10000);
 
-        when(employeeRepository.findOne(1)).thenReturn(expected);
+        when(employeeRepository.findById(1)).thenReturn(expected);
 
         //when
-        Employee employees = employeeService.findOne(1);
+        Employee employees = employeeService.findById(1);
 
         //then
-        assertEquals(expected,employees);
+        assertEquals(expected, employees);
     }
 
     @Test
@@ -51,12 +52,29 @@ public class EmployeeServiceTest {
         EmployeeService employeeService = new EmployeeService(employeeRepository);
         List<Employee> expected = Arrays.asList(new Employee(1, "test", 18, "male", 10000));
 
-        when(employeeRepository.findPage(1,1)).thenReturn(expected);
+        when(employeeRepository.findPage(1, 1)).thenReturn(expected);
 
         //when
-        List<Employee> employees = employeeService.findPage(1,1);
+        List<Employee> employees = employeeService.findPage(1, 1);
 
         //then
-        assertEquals(expected,employees);
+        assertEquals(expected, employees);
+    }
+
+    @Test
+    public void should_return_a_list_of_employees_when_get_employees_with_gender_given_all_employees() {
+        //given
+        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
+        EmployeeService employeeService = new EmployeeService(employeeRepository);
+        List<Employee> expected = Arrays.asList(new Employee(1, "test", 18, "male", 10000));
+
+
+        when(employeeRepository.findByGender("male")).thenReturn(expected);
+
+        //when
+        List<Employee> employees = employeeService.findByGender("male");
+
+        //then
+        assertEquals(expected, employees);
     }
 }

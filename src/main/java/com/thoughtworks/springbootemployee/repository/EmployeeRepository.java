@@ -18,11 +18,15 @@ public class EmployeeRepository {
         return null;
     }
 
-    public Employee findOne(int id) {
+    public Employee findById(int id) {
         return null;
     }
 
     public List<Employee> findPage(int page, int pageSize) {
+        return null;
+    }
+
+    public List<Employee> findByGender(String gender) {
         return null;
     }
 }

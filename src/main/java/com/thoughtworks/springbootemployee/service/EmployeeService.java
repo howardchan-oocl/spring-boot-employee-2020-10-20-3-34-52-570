@@ -20,11 +20,15 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
-    public Employee findOne(int id) {
-        return employeeRepository.findOne(id);
+    public Employee findById(int id) {
+        return employeeRepository.findById(id);
     }
 
     public List<Employee> findPage(int page, int pageSize) {
         return employeeRepository.findPage(page,pageSize);
+    }
+
+    public List<Employee> findByGender(String gender) {
+        return employeeRepository.findByGender(gender);
     }
 }
