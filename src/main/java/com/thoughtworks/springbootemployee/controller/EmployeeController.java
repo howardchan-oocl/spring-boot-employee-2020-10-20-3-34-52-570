@@ -28,13 +28,14 @@ public class EmployeeController {
         return ResponseEntity.ok(this.employees);
     }
 
-    @GetMapping(params = {"gender"})
-    public ResponseEntity<List<Employee>> getAllWithGender(@RequestParam("gender") String gender) {
-        List<Employee> employees = this.employees.stream()
-                .filter(employee -> gender.equalsIgnoreCase(employee.getGender()))
-                .collect(Collectors.toList());
+    @GetMapping("/{employeeId}")
+    public ResponseEntity<Employee> getOne(@PathVariable Integer employeeId) {
+        Employee targetEmployee = this.employees.stream()
+                .filter(employee -> employee.getId().equals(employeeId))
+                .findFirst()
+                .orElse(null);
 
-        return ResponseEntity.ok(employees);
+        return targetEmployee == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(targetEmployee);
     }
 
     @GetMapping(params = {"page", "pageSize"})
@@ -49,14 +50,13 @@ public class EmployeeController {
         return ResponseEntity.ok(employees);
     }
 
-    @GetMapping("/{employeeId}")
-    public ResponseEntity<Employee> getOne(@PathVariable Integer employeeId) {
-        Employee targetEmployee = this.employees.stream()
-                .filter(employee -> employee.getId().equals(employeeId))
-                .findFirst()
-                .orElse(null);
+    @GetMapping(params = {"gender"})
+    public ResponseEntity<List<Employee>> getAllWithGender(@RequestParam("gender") String gender) {
+        List<Employee> employees = this.employees.stream()
+                .filter(employee -> gender.equalsIgnoreCase(employee.getGender()))
+                .collect(Collectors.toList());
 
-        return targetEmployee == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(targetEmployee);
+        return ResponseEntity.ok(employees);
     }
 
     @PostMapping
