@@ -19,6 +19,13 @@ public class CompanyController {
         return ResponseEntity.ok(this.companies);
     }
 
+    @GetMapping("/{index}")
+    public ResponseEntity<Company> getOne(@PathVariable Integer index) {
+        Company targetCompany = this.companies.get(index);
+
+        return targetCompany == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(targetCompany);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Company create(@RequestBody Company company) {
