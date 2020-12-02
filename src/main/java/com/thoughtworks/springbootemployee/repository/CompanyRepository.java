@@ -17,4 +17,8 @@ public class CompanyRepository {
     public List<Company> findAll() {
         return null;
     }
+
+    public Company findByIndex(int index) {
+        return null;
+    }
 }

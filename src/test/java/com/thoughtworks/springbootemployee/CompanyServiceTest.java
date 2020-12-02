@@ -1,9 +1,7 @@
 package com.thoughtworks.springbootemployee;
 
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
-import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import com.thoughtworks.springbootemployee.service.CompanyService;
-import com.thoughtworks.springbootemployee.service.EmployeeService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -15,7 +13,7 @@ import static org.mockito.Mockito.when;
 
 public class CompanyServiceTest {
     @Test
-    public void should_return_all_employees_when_get_all_given_all_employees() {
+    public void should_return_all_companies_when_get_all_given_all_companies() {
         //given
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
         CompanyService companyService = new CompanyService(companyRepository);
@@ -28,5 +26,21 @@ public class CompanyServiceTest {
 
         //then
         assertEquals(expected, companies);
+    }
+
+    @Test
+    public void should_return_a_company_when_get_by_index_given_all_companies() {
+        //given
+        CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
+        CompanyService companyService = new CompanyService(companyRepository);
+        Company expected = new Company("test",1,Arrays.asList(new Employee(1, "test", 18, "male", 10000)));
+
+        when(companyRepository.findByIndex(0)).thenReturn(expected);
+
+        //when
+        Company company = companyService.findByIndex(0);
+
+        //then
+        assertEquals(expected, company);
     }
 }
