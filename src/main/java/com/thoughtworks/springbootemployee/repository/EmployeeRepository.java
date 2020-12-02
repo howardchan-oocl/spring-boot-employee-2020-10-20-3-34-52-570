@@ -21,4 +21,8 @@ public class EmployeeRepository {
     public Employee findOne(int id) {
         return null;
     }
+
+    public List<Employee> findPage(int page, int pageSize) {
+        return null;
+    }
 }

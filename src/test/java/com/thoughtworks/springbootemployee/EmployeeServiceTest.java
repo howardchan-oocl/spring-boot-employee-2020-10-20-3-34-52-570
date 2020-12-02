@@ -43,4 +43,20 @@ public class EmployeeServiceTest {
         //then
         assertEquals(expected,employees);
     }
+
+    @Test
+    public void should_return_a_fixed_size_list_of_employees_when_get_page_given_all_employees() {
+        //given
+        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
+        EmployeeService employeeService = new EmployeeService(employeeRepository);
+        List<Employee> expected = Arrays.asList(new Employee(1, "test", 18, "male", 10000));
+
+        when(employeeRepository.findPage(1,1)).thenReturn(expected);
+
+        //when
+        List<Employee> employees = employeeService.findPage(1,1);
+
+        //then
+        assertEquals(expected,employees);
+    }
 }

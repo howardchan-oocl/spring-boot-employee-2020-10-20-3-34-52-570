@@ -24,4 +24,7 @@ public class EmployeeService {
         return employeeRepository.findOne(id);
     }
 
+    public List<Employee> findPage(int page, int pageSize) {
+        return employeeRepository.findPage(page,pageSize);
+    }
 }
