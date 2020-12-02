@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/companies")
@@ -31,6 +32,18 @@ public class CompanyController {
         List<Employee> employees = this.companies.get(index).getEmployees();
 
         return ResponseEntity.ok(employees);
+    }
+
+    @GetMapping(params = {"page", "pageSize"})
+    public ResponseEntity<List<Company>> getAllWithPagination(@RequestParam("page") Integer pageIndex, @RequestParam("pageSize") Integer pageSize) {
+        int itemAmountToBeSkip = (pageIndex - 1) * pageSize;
+
+        List<Company> companies = this.companies.stream()
+                .skip(itemAmountToBeSkip)
+                .limit(pageSize)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(companies);
     }
 
     @PostMapping
