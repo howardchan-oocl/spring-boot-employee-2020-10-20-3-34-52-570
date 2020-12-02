@@ -43,4 +43,20 @@ public class CompanyServiceTest {
         //then
         assertEquals(expected, company);
     }
+
+    @Test
+    public void should_return_a_list_of_employees_when_get_by_index_for_employees_given_all_companies() {
+        //given
+        CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
+        CompanyService companyService = new CompanyService(companyRepository);
+        List<Employee> expected = Arrays.asList(new Employee(1, "test", 18, "male", 10000));
+
+        when(companyRepository.findByIndexForEmployees(0)).thenReturn(expected);
+
+        //when
+        List<Employee> employees = companyService.findByIndexForEmployees(0);
+
+        //then
+        assertEquals(expected, employees);
+    }
 }
