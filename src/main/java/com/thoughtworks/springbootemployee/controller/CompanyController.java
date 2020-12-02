@@ -53,4 +53,14 @@ public class CompanyController {
 
         return company;
     }
+
+    @PutMapping("/{index}")
+    public ResponseEntity<Company> update(@PathVariable Integer index, @RequestBody Company requestCompany) {
+        if (this.companies.size() >= index + 1) {
+            this.companies.set(index,requestCompany);
+            return ResponseEntity.ok(requestCompany);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
