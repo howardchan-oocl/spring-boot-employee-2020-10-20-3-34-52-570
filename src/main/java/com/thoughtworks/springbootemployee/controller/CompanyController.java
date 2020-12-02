@@ -63,4 +63,14 @@ public class CompanyController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @DeleteMapping("/{index}")
+    public ResponseEntity<Void> delete(@PathVariable Integer index) {
+        if (this.companies.size() >= index + 1) {
+            this.companies.remove(index.intValue());
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
