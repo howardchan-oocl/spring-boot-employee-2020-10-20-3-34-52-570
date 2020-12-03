@@ -180,4 +180,20 @@ public class CompanyIntegrationTest {
 
         //then
     }
+
+    @Test
+    public void should_return_not_found_when_delete_an_invalid_company_given_companies() throws Exception {
+        //given
+        List<Employee> employees = Arrays.asList(new Employee("Howard", 18, "male", 99999));
+        Company company = new Company("test", 1, employees);
+        Company company2 = new Company("test2", 1, employees);
+        companyRepository.save(company);
+        companyRepository.save(company2);
+
+        //when
+        mockMvc.perform(delete("/companies/1"))
+                .andExpect(status().isNotFound());
+
+        //then
+    }
 }
