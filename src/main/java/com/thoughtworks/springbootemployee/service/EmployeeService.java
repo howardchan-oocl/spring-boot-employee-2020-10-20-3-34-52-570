@@ -1,6 +1,6 @@
 package com.thoughtworks.springbootemployee.service;
 
-import com.thoughtworks.springbootemployee.Exception.EmployeeIdNotFoundException;
+import com.thoughtworks.springbootemployee.Exception.IdNotFoundException;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,19 +40,19 @@ public class EmployeeService {
         return employeeRepository.insert(employee);
     }
 
-    public Employee update(String employeeId, Employee requestEmployee) throws EmployeeIdNotFoundException {
+    public Employee update(String employeeId, Employee requestEmployee) throws IdNotFoundException {
         if (employeeRepository.existsById(employeeId)) {
             requestEmployee.setId(employeeId);
             return employeeRepository.save(requestEmployee);
         }
-        throw new EmployeeIdNotFoundException();
+        throw new IdNotFoundException();
     }
 
-    public boolean delete(String employeeId) throws EmployeeIdNotFoundException {
+    public boolean delete(String employeeId) throws IdNotFoundException {
         if (employeeRepository.existsById(employeeId)) {
             employeeRepository.deleteById(employeeId);
             return true;
         }
-        throw new EmployeeIdNotFoundException();
+        throw new IdNotFoundException();
     }
 }

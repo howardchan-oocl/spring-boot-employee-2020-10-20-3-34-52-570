@@ -1,6 +1,6 @@
 package com.thoughtworks.springbootemployee;
 
-import com.thoughtworks.springbootemployee.Exception.EmployeeIdNotFoundException;
+import com.thoughtworks.springbootemployee.Exception.IdNotFoundException;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import com.thoughtworks.springbootemployee.service.EmployeeService;
@@ -102,7 +102,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void should_return_an_employee_when_update() throws EmployeeIdNotFoundException {
+    public void should_return_an_employee_when_update() throws IdNotFoundException {
         //given
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
@@ -119,7 +119,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void should_delete_an_employee_when_delete() throws EmployeeIdNotFoundException {
+    public void should_delete_an_employee_when_delete() throws IdNotFoundException {
         //given
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
@@ -142,9 +142,9 @@ public class EmployeeServiceTest {
         when(employeeRepository.existsById("1")).thenReturn(false);
 
         //when
-        EmployeeIdNotFoundException employeeIdNotFoundException = assertThrows(EmployeeIdNotFoundException.class, () -> employeeService.delete("1"));
+        IdNotFoundException idNotFoundException = assertThrows(IdNotFoundException.class, () -> employeeService.delete("1"));
 
         //Then
-        assertEquals("Employee Id Not Found", employeeIdNotFoundException.getMessage());
+        assertEquals("Employee Id Not Found", idNotFoundException.getMessage());
     }
 }
