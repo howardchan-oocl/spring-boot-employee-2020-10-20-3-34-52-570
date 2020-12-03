@@ -124,4 +124,32 @@ public class EmployeeIntegrationTest {
 
         //then
     }
+
+    @Test
+    public void should_return_all_male_employees_when_get_by_gender_given_employees() throws Exception {
+        //given
+        Employee employee = new Employee("Howard", 18, "male", 99999);
+        Employee employee2 = new Employee("Howard2", 18, "female", 99999);
+        Employee employee3 = new Employee("Howard3", 18, "male", 99999);
+        employeeRepository.save(employee);
+        employeeRepository.save(employee2);
+        employeeRepository.save(employee3);
+
+        //when
+        mockMvc.perform(get("/employees?gender=male"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id").isString())
+                .andExpect(jsonPath("$[0].name").value("Howard"))
+                .andExpect(jsonPath("$[0].age").value(18))
+                .andExpect(jsonPath("$[0].gender").value("male"))
+                .andExpect(jsonPath("$[0].salary").value(99999))
+                .andExpect(jsonPath("$[1].id").isString())
+                .andExpect(jsonPath("$[1].name").value("Howard3"))
+                .andExpect(jsonPath("$[1].age").value(18))
+                .andExpect(jsonPath("$[1].gender").value("male"))
+                .andExpect(jsonPath("$[1].salary").value(99999));
+
+        //then
+    }
 }
