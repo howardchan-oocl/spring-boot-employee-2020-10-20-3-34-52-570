@@ -48,10 +48,10 @@ public class EmployeeService {
         throw new EmployeeIdNotFoundException();
     }
 
-    public void delete(String employeeId) throws EmployeeIdNotFoundException {
+    public boolean delete(String employeeId) throws EmployeeIdNotFoundException {
         if (employeeRepository.existsById(employeeId)) {
             employeeRepository.deleteById(employeeId);
-            return;
+            return true;
         }
         throw new EmployeeIdNotFoundException();
     }
