@@ -1,18 +1,22 @@
 package com.thoughtworks.springbootemployee.controller;
 
 import com.thoughtworks.springbootemployee.model.Employee;
-import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import com.thoughtworks.springbootemployee.service.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
-    private EmployeeService employeeService = new EmployeeService(new EmployeeRepository());
+    @Autowired
+    private EmployeeService employeeService;
 
     @GetMapping
     public ResponseEntity<List<Employee>> getAll() {
@@ -20,17 +24,17 @@ public class EmployeeController {
     }
 
     @GetMapping("/{employeeId}")
-    public ResponseEntity<Employee> getOne(@PathVariable Integer employeeId) {
-        Employee employee = employeeService.findById(employeeId);
+    public ResponseEntity<Employee> getOne(@PathVariable String employeeId) {
+        Optional<Employee> employee = employeeService.findById(employeeId);
 
-        return employee == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(employee);
+        return employee.isPresent() ? ResponseEntity.ok(employee.get()) : ResponseEntity.notFound().build();
     }
 
     @GetMapping(params = {"page", "pageSize"})
     public ResponseEntity<List<Employee>> getAllWithPagination(@RequestParam("page") Integer pageIndex, @RequestParam("pageSize") Integer pageSize) {
-        List<Employee> employees = employeeService.findPage(pageIndex, pageSize);
+        Page<Employee> employees = employeeService.findPage(PageRequest.of(pageIndex, pageSize));
 
-        return ResponseEntity.ok(employees);
+        return ResponseEntity.ok(employees.getContent());
     }
 
     @GetMapping(params = {"gender"})
@@ -47,20 +51,22 @@ public class EmployeeController {
     }
 
     @PutMapping("/{employeeId}")
-    public ResponseEntity<Employee> update(@PathVariable Integer employeeId, @RequestBody Employee requestEmployee) {
-        Employee employee = employeeService.update(employeeId, requestEmployee);
-
-        if (employee != null) {
+    public ResponseEntity<Employee> update(@PathVariable String employeeId, @RequestBody Employee requestEmployee) {
+        try {
+            Employee employee = employeeService.update(employeeId, requestEmployee);
             return ResponseEntity.ok(employee);
-        } else {
+        } catch (Exception exception) {
             return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping("/{employeeId}")
-    public ResponseEntity<Void> delete(@PathVariable Integer employeeId) {
-        boolean isDeleted = employeeService.delete(employeeId);
-
-        return isDeleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    public ResponseEntity<Void> delete(@PathVariable String employeeId) {
+        try {
+            employeeService.delete(employeeId);
+            return ResponseEntity.noContent().build();
+        } catch (Exception exception) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

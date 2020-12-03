@@ -5,9 +5,13 @@ import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import com.thoughtworks.springbootemployee.service.EmployeeService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -34,15 +38,15 @@ public class EmployeeServiceTest {
         //given
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
-        Employee expected = new Employee("1", "test", 18, "male", 10000);
+        Optional<Employee> expected = Optional.of(new Employee("1", "test", 18, "male", 10000));
 
-        when(employeeRepository.findById(1)).thenReturn(expected);
+        when(employeeRepository.findById("1")).thenReturn(expected);
 
         //when
-        Employee employees = employeeService.findById(1);
+        Optional<Employee> employee = employeeService.findById("1");
 
         //then
-        assertEquals(expected, employees);
+        assertEquals(expected, employee);
     }
 
     @Test
@@ -50,12 +54,13 @@ public class EmployeeServiceTest {
         //given
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
-        List<Employee> expected = Arrays.asList(new Employee("1", "test", 18, "male", 10000));
+        List<Employee> listOfEmployee = Arrays.asList(new Employee("1", "test", 18, "male", 10000));
+        Page<Employee> expected = new PageImpl<>(listOfEmployee);
 
-        when(employeeRepository.findPage(1, 1)).thenReturn(expected);
+        when(employeeRepository.findAll(PageRequest.of(1,1))).thenReturn(expected);
 
         //when
-        List<Employee> employees = employeeService.findPage(1, 1);
+        Page<Employee> employees = employeeService.findPage(PageRequest.of(1,1));
 
         //then
         assertEquals(expected, employees);

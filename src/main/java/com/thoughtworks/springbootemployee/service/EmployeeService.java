@@ -1,11 +1,15 @@
 package com.thoughtworks.springbootemployee.service;
 
+import com.thoughtworks.springbootemployee.Exception.EmployeeIdNotFoundException;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmployeeService {
@@ -20,12 +24,12 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
-    public Employee findById(int id) {
+    public Optional<Employee> findById(String id) {
         return employeeRepository.findById(id);
     }
 
-    public List<Employee> findPage(int page, int pageSize) {
-        return employeeRepository.findPage(page, pageSize);
+    public Page<Employee> findPage(Pageable pageable) {
+        return employeeRepository.findAll(pageable);
     }
 
     public List<Employee> findByGender(String gender) {
@@ -33,14 +37,22 @@ public class EmployeeService {
     }
 
     public Employee addOne(Employee employee) {
-        return employeeRepository.addOne(employee);
+        return employeeRepository.insert(employee);
     }
 
-    public Employee update(int employeeId, Employee requestEmployee) {
-        return employeeRepository.update(employeeId, requestEmployee);
+    public Employee update(String employeeId, Employee requestEmployee) throws EmployeeIdNotFoundException {
+        if (employeeRepository.existsById(employeeId)) {
+            requestEmployee.setId(employeeId);
+            return employeeRepository.save(requestEmployee);
+        }
+        throw new EmployeeIdNotFoundException();
     }
 
-    public boolean delete(int employeeId) {
-        return employeeRepository.delete(employeeId);
+    public void delete(String employeeId) throws EmployeeIdNotFoundException {
+        if (employeeRepository.existsById(employeeId)) {
+            employeeRepository.deleteById(employeeId);
+            return;
+        }
+        throw new EmployeeIdNotFoundException();
     }
 }
