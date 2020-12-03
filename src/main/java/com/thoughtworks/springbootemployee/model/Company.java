@@ -1,8 +1,13 @@
 package com.thoughtworks.springbootemployee.model;
 
+import org.springframework.data.mongodb.core.mapping.FieldType;
+import org.springframework.data.mongodb.core.mapping.MongoId;
+
 import java.util.List;
 
 public class Company {
+    @MongoId(FieldType.OBJECT_ID)
+    private String id;
     private String companyName;
     private Integer employeesNumber;
     private List<Employee> employees;
@@ -27,5 +32,8 @@ public class Company {
 
     public List<Employee> getEmployees() {
         return employees;
+    }
+
+    public void setId(String id) {
     }
 }

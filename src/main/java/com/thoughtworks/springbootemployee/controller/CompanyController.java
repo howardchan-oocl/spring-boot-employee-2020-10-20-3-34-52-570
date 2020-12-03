@@ -4,63 +4,70 @@ import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
 import com.thoughtworks.springbootemployee.service.CompanyService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/companies")
 public class CompanyController {
-    private CompanyService companyService = new CompanyService(new CompanyRepository());
+    @Autowired
+    private CompanyService companyService;
 
     @GetMapping
     public ResponseEntity<List<Company>> getAll() {
         return ResponseEntity.ok(companyService.findAll());
     }
 
-    @GetMapping("/{index}")
-    public ResponseEntity<Company> getOne(@PathVariable Integer index) {
-        Company targetCompany = companyService.findByIndex(index);
+    @GetMapping("/{id}")
+    public ResponseEntity<Company> getOne(@PathVariable String id) {
+        Optional<Company> targetCompany = companyService.findById(id);
 
-        return targetCompany == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(targetCompany);
+        return targetCompany.isPresent() ? ResponseEntity.ok(targetCompany.get()) : ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/{index}/employees")
-    public ResponseEntity<List<Employee>> getEmployeesOfOneCompany(@PathVariable Integer index) {
-        List<Employee> employees = companyService.getEmployeesOfOneCompany(index);
+    @GetMapping("/{id}/employees")
+    public ResponseEntity<List<Employee>> getEmployeesOfOneCompany(@PathVariable String id) {
+        List<Employee> employees = companyService.findByIdForEmployees(id);
         return ResponseEntity.ok(employees);
     }
 
     @GetMapping(params = {"page", "pageSize"})
     public ResponseEntity<List<Company>> getAllWithPagination(@RequestParam("page") Integer pageIndex, @RequestParam("pageSize") Integer pageSize) {
-        List<Company> companies = this.companyService.findPage(pageIndex, pageSize);
+        Page<Company> companies = this.companyService.findPage(PageRequest.of(pageIndex, pageSize));
 
-        return ResponseEntity.ok(companies);
+        return ResponseEntity.ok(companies.getContent());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Company create(@RequestBody Company company) {
-        Company newCompany = companyService.addOne(company);
-
-        return newCompany;
+        return companyService.addOne(company);
     }
 
-    @PutMapping("/{index}")
-    public ResponseEntity<Company> update(@PathVariable Integer index, @RequestBody Company requestCompany) {
-        Company company = companyService.update(index, requestCompany);
-        if (company != null) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Company> update(@PathVariable String id, @RequestBody Company requestCompany) {
+        try {
+            Company company = companyService.update(id, requestCompany);
             return ResponseEntity.ok(company);
-        } else {
+        } catch (Exception exception) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @DeleteMapping("/{index}")
-    public ResponseEntity<Void> delete(@PathVariable Integer index) {
-        boolean isDeleted = companyService.delete(index);
-        return isDeleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+        try {
+            companyService.delete(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception exception) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
