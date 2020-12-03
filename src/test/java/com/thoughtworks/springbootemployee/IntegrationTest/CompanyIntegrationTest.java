@@ -46,4 +46,19 @@ public class CompanyIntegrationTest {
                 .andExpect(jsonPath("$[0].employeesNumber").value(1));
         //then
     }
+
+    @Test
+    public void should_return_a_company_when_get_one_given_companies() throws Exception {
+        //given
+        List<Employee> employees = Arrays.asList(new Employee("Howard", 18, "male", 99999));
+        Company company = new Company("test", 1, employees);
+        companyRepository.save(company);
+
+        //when
+        mockMvc.perform(get("/companies/" + company.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.companyName").value("test"))
+                .andExpect(jsonPath("$.employeesNumber").value(1));
+        //then
+    }
 }

@@ -36,4 +36,8 @@ public class Company {
 
     public void setId(String id) {
     }
+
+    public String getId() {
+        return id;
+    }
 }
