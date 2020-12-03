@@ -61,4 +61,22 @@ public class CompanyIntegrationTest {
                 .andExpect(jsonPath("$.employeesNumber").value(1));
         //then
     }
+
+    @Test
+    public void should_return_employees_when_employees_of_a_company_given_companies() throws Exception {
+        //given
+        List<Employee> employees = Arrays.asList(new Employee("Howard", 18, "male", 99999));
+        Company company = new Company("test", 1, employees);
+        companyRepository.save(company);
+
+        //when
+        mockMvc.perform(get("/companies/" + company.getId() + "/employees"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").value("Howard"))
+                .andExpect(jsonPath("$[0].age").value(18))
+                .andExpect(jsonPath("$[0].gender").value("male"))
+                .andExpect(jsonPath("$[0].salary").value(99999));
+
+        //then
+    }
 }
