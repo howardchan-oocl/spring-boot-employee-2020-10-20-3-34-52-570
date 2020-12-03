@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -76,6 +77,30 @@ public class CompanyIntegrationTest {
                 .andExpect(jsonPath("$[0].age").value(18))
                 .andExpect(jsonPath("$[0].gender").value("male"))
                 .andExpect(jsonPath("$[0].salary").value(99999));
+
+        //then
+    }
+
+    @Test
+    public void should_return_page_when_get_page_given_companies() throws Exception {
+        //given
+        List<Employee> employees = Arrays.asList(new Employee("Howard", 18, "male", 99999));
+        Company company = new Company("test", 1, employees);
+        Company company2 = new Company("test2", 1, employees);
+        Company company3 = new Company("test3", 1, employees);
+
+        companyRepository.save(company);
+        companyRepository.save(company2);
+        companyRepository.save(company3);
+
+        //when
+        mockMvc.perform(get("/companies?page=0&pageSize=2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].companyName").value("test"))
+                .andExpect(jsonPath("$[0].employeesNumber").value(1))
+                .andExpect(jsonPath("$[1].companyName").value("test2"))
+                .andExpect(jsonPath("$[1].employeesNumber").value(1));
 
         //then
     }
