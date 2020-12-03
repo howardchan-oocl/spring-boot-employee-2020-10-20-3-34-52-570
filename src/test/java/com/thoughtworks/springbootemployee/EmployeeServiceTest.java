@@ -5,7 +5,11 @@ import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import com.thoughtworks.springbootemployee.service.EmployeeService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -17,12 +21,18 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
+@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class EmployeeServiceTest {
+    @Mock
+    EmployeeRepository employeeRepository;
+
+    @InjectMocks
+    EmployeeService employeeService;
+
     @Test
     public void should_return_all_employees_when_get_all_given_all_employees() {
         //given
-        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
-        EmployeeService employeeService = new EmployeeService(employeeRepository);
         List<Employee> expected = Arrays.asList(new Employee("1", "test", 18, "male", 10000));
 
         when(employeeRepository.findAll()).thenReturn(expected);
@@ -37,8 +47,6 @@ public class EmployeeServiceTest {
     @Test
     public void should_return_a_employee_when_get_one_given_all_employees() {
         //given
-        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
-        EmployeeService employeeService = new EmployeeService(employeeRepository);
         Optional<Employee> expected = Optional.of(new Employee("1", "test", 18, "male", 10000));
 
         when(employeeRepository.findById("1")).thenReturn(expected);
@@ -53,8 +61,6 @@ public class EmployeeServiceTest {
     @Test
     public void should_return_a_fixed_size_list_of_employees_when_get_page_given_all_employees() {
         //given
-        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
-        EmployeeService employeeService = new EmployeeService(employeeRepository);
         List<Employee> listOfEmployee = Arrays.asList(new Employee("1", "test", 18, "male", 10000));
         Page<Employee> expected = new PageImpl<>(listOfEmployee);
 
@@ -70,8 +76,6 @@ public class EmployeeServiceTest {
     @Test
     public void should_return_a_list_of_employees_when_get_employees_with_gender_given_all_employees() {
         //given
-        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
-        EmployeeService employeeService = new EmployeeService(employeeRepository);
         List<Employee> expected = Arrays.asList(new Employee("1", "test", 18, "male", 10000));
 
 
@@ -87,8 +91,6 @@ public class EmployeeServiceTest {
     @Test
     public void should_return_an_employee_when_add_one() {
         //given
-        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
-        EmployeeService employeeService = new EmployeeService(employeeRepository);
         Employee expected = new Employee("1", "test", 18, "male", 10000);
 
 
@@ -104,8 +106,6 @@ public class EmployeeServiceTest {
     @Test
     public void should_return_an_employee_when_update() throws IdNotFoundException {
         //given
-        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
-        EmployeeService employeeService = new EmployeeService(employeeRepository);
         Employee expected = new Employee("1", "test", 18, "male", 10000);
 
         when(employeeRepository.existsById("1")).thenReturn(true);
@@ -121,8 +121,6 @@ public class EmployeeServiceTest {
     @Test
     public void should_delete_an_employee_when_delete() throws IdNotFoundException {
         //given
-        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
-        EmployeeService employeeService = new EmployeeService(employeeRepository);
 
         when(employeeRepository.existsById("1")).thenReturn(true);
 
@@ -136,8 +134,6 @@ public class EmployeeServiceTest {
     @Test
     public void should_throw_exception_when_delete_with_an_invalid_id() {
         //given
-        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
-        EmployeeService employeeService = new EmployeeService(employeeRepository);
 
         when(employeeRepository.existsById("1")).thenReturn(false);
 
@@ -145,6 +141,6 @@ public class EmployeeServiceTest {
         IdNotFoundException idNotFoundException = assertThrows(IdNotFoundException.class, () -> employeeService.delete("1"));
 
         //Then
-        assertEquals("Employee Id Not Found", idNotFoundException.getMessage());
+        assertEquals("ID NOT FOUND ERROR", idNotFoundException.getMessage());
     }
 }
