@@ -15,8 +15,7 @@ public class Employee {
 
     }
 
-    public Employee(String id, String name, int age, String gender, int salary) {
-        this.id = id;
+    public Employee(String name, int age, String gender, int salary) {
         this.name = name;
         this.age = age;
         this.gender = gender;

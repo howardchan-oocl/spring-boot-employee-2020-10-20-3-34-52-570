@@ -1,4 +1,4 @@
-package com.thoughtworks.springbootemployee;
+package com.thoughtworks.springbootemployee.ServiceTest;
 
 import com.thoughtworks.springbootemployee.Exception.IdNotFoundException;
 import com.thoughtworks.springbootemployee.model.Company;
@@ -34,7 +34,7 @@ public class CompanyServiceTest {
     @Test
     public void should_return_all_companies_when_get_all_given_all_companies() {
         //given
-        List<Company> expected = Arrays.asList(new Company("1", "test", 1, Arrays.asList(new Employee("1", "test", 18, "male", 10000))));
+        List<Company> expected = Arrays.asList(new Company("test", 1, Arrays.asList(new Employee("test", 18, "male", 10000))));
 
         when(companyRepository.findAll()).thenReturn(expected);
 
@@ -48,7 +48,7 @@ public class CompanyServiceTest {
     @Test
     public void should_return_a_company_when_get_by_id_given_all_companies() {
         //given
-        Optional<Company> expected = Optional.of(new Company("1", "test", 1, Arrays.asList(new Employee("1", "test", 18, "male", 10000))));
+        Optional<Company> expected = Optional.of(new Company("test", 1, Arrays.asList(new Employee("test", 18, "male", 10000))));
 
         when(companyRepository.findById("1")).thenReturn(expected);
 
@@ -62,8 +62,8 @@ public class CompanyServiceTest {
     @Test
     public void should_return_a_list_of_employees_when_get_by_index_for_employees_given_all_companies() {
         //given
-        List<Employee> expected = Arrays.asList(new Employee("1", "test", 18, "male", 10000));
-        Optional<Company> company = Optional.of(new Company("1", "test", 1, expected));
+        List<Employee> expected = Arrays.asList(new Employee("test", 18, "male", 10000));
+        Optional<Company> company = Optional.of(new Company("test", 1, expected));
 
         when(companyRepository.findById("1")).thenReturn(company);
 
@@ -77,7 +77,7 @@ public class CompanyServiceTest {
     @Test
     public void should_return_a_fixed_size_list_of_companies_when_get_page_given_all_companies() {
         //given
-        List<Company> listOfCompany = Arrays.asList(new Company("1", "test", 1, Arrays.asList(new Employee("1", "test", 18, "male", 10000))));
+        List<Company> listOfCompany = Arrays.asList(new Company("test", 1, Arrays.asList(new Employee("test", 18, "male", 10000))));
         Page<Company> expected = new PageImpl<>(listOfCompany);
 
         when(companyRepository.findAll(PageRequest.of(1, 1))).thenReturn(expected);
@@ -92,7 +92,7 @@ public class CompanyServiceTest {
     @Test
     public void should_return_a_company_when_add_one() {
         //given
-        Company expected = new Company("1", "test", 1, Arrays.asList(new Employee("1", "test", 18, "male", 10000)));
+        Company expected = new Company("test", 1, Arrays.asList(new Employee("test", 18, "male", 10000)));
 
         when(companyService.addOne(expected)).thenReturn(expected);
 
@@ -106,7 +106,7 @@ public class CompanyServiceTest {
     @Test
     public void should_return_an_employee_when_update() throws IdNotFoundException {
         //given
-        Company expected = new Company("1", "test", 1, Arrays.asList(new Employee("1", "test", 18, "male", 10000)));
+        Company expected = new Company("test", 1, Arrays.asList(new Employee("test", 18, "male", 10000)));
 
         when(companyRepository.existsById("1")).thenReturn(true);
         when(companyRepository.save(expected)).thenReturn(expected);

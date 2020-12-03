@@ -1,4 +1,4 @@
-package com.thoughtworks.springbootemployee;
+package com.thoughtworks.springbootemployee.ServiceTest;
 
 import com.thoughtworks.springbootemployee.Exception.IdNotFoundException;
 import com.thoughtworks.springbootemployee.model.Employee;
@@ -33,7 +33,7 @@ public class EmployeeServiceTest {
     @Test
     public void should_return_all_employees_when_get_all_given_all_employees() {
         //given
-        List<Employee> expected = Arrays.asList(new Employee("1", "test", 18, "male", 10000));
+        List<Employee> expected = Arrays.asList(new Employee("test", 18, "male", 10000));
 
         when(employeeRepository.findAll()).thenReturn(expected);
 
@@ -47,7 +47,7 @@ public class EmployeeServiceTest {
     @Test
     public void should_return_a_employee_when_get_one_given_all_employees() {
         //given
-        Optional<Employee> expected = Optional.of(new Employee("1", "test", 18, "male", 10000));
+        Optional<Employee> expected = Optional.of(new Employee("test", 18, "male", 10000));
 
         when(employeeRepository.findById("1")).thenReturn(expected);
 
@@ -61,7 +61,7 @@ public class EmployeeServiceTest {
     @Test
     public void should_return_a_fixed_size_list_of_employees_when_get_page_given_all_employees() {
         //given
-        List<Employee> listOfEmployee = Arrays.asList(new Employee("1", "test", 18, "male", 10000));
+        List<Employee> listOfEmployee = Arrays.asList(new Employee("test", 18, "male", 10000));
         Page<Employee> expected = new PageImpl<>(listOfEmployee);
 
         when(employeeRepository.findAll(PageRequest.of(1, 1))).thenReturn(expected);
@@ -76,7 +76,7 @@ public class EmployeeServiceTest {
     @Test
     public void should_return_a_list_of_employees_when_get_employees_with_gender_given_all_employees() {
         //given
-        List<Employee> expected = Arrays.asList(new Employee("1", "test", 18, "male", 10000));
+        List<Employee> expected = Arrays.asList(new Employee("test", 18, "male", 10000));
 
 
         when(employeeRepository.findByGender("male")).thenReturn(expected);
@@ -91,7 +91,7 @@ public class EmployeeServiceTest {
     @Test
     public void should_return_an_employee_when_add_one() {
         //given
-        Employee expected = new Employee("1", "test", 18, "male", 10000);
+        Employee expected = new Employee("test", 18, "male", 10000);
 
 
         when(employeeRepository.insert(expected)).thenReturn(expected);
@@ -106,7 +106,7 @@ public class EmployeeServiceTest {
     @Test
     public void should_return_an_employee_when_update() throws IdNotFoundException {
         //given
-        Employee expected = new Employee("1", "test", 18, "male", 10000);
+        Employee expected = new Employee("test", 18, "male", 10000);
 
         when(employeeRepository.existsById("1")).thenReturn(true);
         when(employeeRepository.save(expected)).thenReturn(expected);
