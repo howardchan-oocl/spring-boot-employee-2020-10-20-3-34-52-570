@@ -15,7 +15,10 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -103,5 +106,34 @@ public class CompanyIntegrationTest {
                 .andExpect(jsonPath("$[1].employeesNumber").value(1));
 
         //then
+    }
+
+    @Test
+    public void should_return_company_when_add_one_given_companies() throws Exception {
+        //given
+        String employeeAsJson = "{   \n" +
+                "    \"companyName\": \"test\",\n" +
+                "    \"employeesNumber\": 1,\n" +
+                "    \"employees\": [{\n" +
+                "        \"name\": \"Howard3\",\n" +
+                "        \"age\": 18,\n" +
+                "        \"gender\": \"male\",\n" +
+                "        \"salary\": 99999\n" +
+                "    }]\n" +
+                "}";
+
+        //when
+        //then
+        mockMvc.perform(post("/companies")
+                .contentType(APPLICATION_JSON)
+                .content(employeeAsJson))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.companyName").value("test"))
+                .andExpect(jsonPath("$.employeesNumber").value(1));
+
+        List<Company> companies = companyRepository.findAll();
+        assertEquals(1, companies.size());
+        assertEquals("test", companies.get(0).getCompanyName());
+        assertEquals(1, companies.get(0).getEmployeesNumber());
     }
 }
