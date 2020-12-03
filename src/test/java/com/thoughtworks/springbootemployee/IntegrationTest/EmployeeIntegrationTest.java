@@ -180,4 +180,19 @@ public class EmployeeIntegrationTest {
 
         //then
     }
+
+    @Test
+    public void should_return_nothing_when_delete_given_employees() throws Exception {
+        //given
+        Employee employee = new Employee("Howard", 18, "male", 99999);
+        Employee employee2 = new Employee("Howard2", 18, "female", 99999);
+        employeeRepository.save(employee);
+        employeeRepository.save(employee2);
+
+        //when
+        mockMvc.perform(delete("/employees/" + employee.getId()))
+                .andExpect(status().isNoContent());
+
+        //then
+    }
 }
