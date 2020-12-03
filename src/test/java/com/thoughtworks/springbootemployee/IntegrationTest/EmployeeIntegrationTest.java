@@ -7,9 +7,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,6 +47,53 @@ public class EmployeeIntegrationTest {
                 .andExpect(jsonPath("$[0].age").value(18))
                 .andExpect(jsonPath("$[0].gender").value("male"))
                 .andExpect(jsonPath("$[0].salary").value(99999));
+
+        //then
+    }
+
+
+    @Test
+    public void should_return_employee_when_create_employee_given_employees() throws Exception {
+        //given
+        String employeeAsJson = "{\n" +
+                "    \"name\": \"Howard\",\n" +
+                "    \"age\": 18,\n" +
+                "    \"gender\": \"male\",\n" +
+                "    \"salary\": 99999\n" +
+                "}";
+
+        //when
+        //then
+        mockMvc.perform(post("/employees")
+                .contentType(APPLICATION_JSON)
+                .content(employeeAsJson))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").isString())
+                .andExpect(jsonPath("$.name").value("Howard"))
+                .andExpect(jsonPath("$.age").value(18))
+                .andExpect(jsonPath("$.gender").value("male"))
+                .andExpect(jsonPath("$.salary").value(99999));
+
+        List<Employee> employees = employeeRepository.findAll();
+        assertEquals(1, employees.size());
+        assertEquals("Howard", employees.get(0).getName());
+        assertEquals(18, employees.get(0).getAge());
+    }
+
+    @Test
+    public void should_return_employee_when_get_one_given_employees() throws Exception {
+        //given
+        Employee employee = new Employee("Howard", 18, "male", 99999);
+        employeeRepository.save(employee);
+
+        //when
+        mockMvc.perform(get("/employees/" + employee.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").isString())
+                .andExpect(jsonPath("$.name").value("Howard"))
+                .andExpect(jsonPath("$.age").value(18))
+                .andExpect(jsonPath("$.gender").value("male"))
+                .andExpect(jsonPath("$.salary").value(99999));
 
         //then
     }
