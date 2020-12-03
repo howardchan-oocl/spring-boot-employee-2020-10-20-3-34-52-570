@@ -25,10 +25,22 @@ public class EmployeeService {
     }
 
     public List<Employee> findPage(int page, int pageSize) {
-        return employeeRepository.findPage(page,pageSize);
+        return employeeRepository.findPage(page, pageSize);
     }
 
     public List<Employee> findByGender(String gender) {
         return employeeRepository.findByGender(gender);
+    }
+
+    public Employee addOne(Employee employee) {
+        return employeeRepository.addOne(employee);
+    }
+
+    public Employee update(int employeeId, Employee requestEmployee) {
+        return employeeRepository.update(employeeId, requestEmployee);
+    }
+
+    public boolean delete(int employeeId) {
+        return employeeRepository.delete(employeeId);
     }
 }
