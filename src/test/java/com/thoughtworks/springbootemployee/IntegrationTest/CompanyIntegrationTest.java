@@ -90,7 +90,6 @@ public class CompanyIntegrationTest {
         Company company = new Company("test", 1, employees);
         Company company2 = new Company("test2", 1, employees);
         Company company3 = new Company("test3", 1, employees);
-
         companyRepository.save(company);
         companyRepository.save(company2);
         companyRepository.save(company3);
@@ -142,7 +141,6 @@ public class CompanyIntegrationTest {
         List<Employee> employees = Arrays.asList(new Employee("Howard", 18, "male", 99999));
         Company company = new Company("test", 1, employees);
         Company company2 = new Company("test2", 1, employees);
-
         companyRepository.save(company);
         companyRepository.save(company2);
         String employeeAsJson = "{   \n" +
@@ -163,6 +161,22 @@ public class CompanyIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.companyName").value("testtesttest"))
                 .andExpect(jsonPath("$.employeesNumber").value(1));
+
+        //then
+    }
+
+    @Test
+    public void should_return_nothing_when_delete_given_companies() throws Exception {
+        //given
+        List<Employee> employees = Arrays.asList(new Employee("Howard", 18, "male", 99999));
+        Company company = new Company("test", 1, employees);
+        Company company2 = new Company("test2", 1, employees);
+        companyRepository.save(company);
+        companyRepository.save(company2);
+
+        //when
+        mockMvc.perform(delete("/companies/" + company.getId()))
+                .andExpect(status().isNoContent());
 
         //then
     }
