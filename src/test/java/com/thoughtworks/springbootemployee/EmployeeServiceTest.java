@@ -18,7 +18,7 @@ public class EmployeeServiceTest {
         //given
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
-        List<Employee> expected = Arrays.asList(new Employee(1, "test", 18, "male", 10000));
+        List<Employee> expected = Arrays.asList(new Employee("1", "test", 18, "male", 10000));
 
         when(employeeRepository.findAll()).thenReturn(expected);
 
@@ -34,7 +34,7 @@ public class EmployeeServiceTest {
         //given
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
-        Employee expected = new Employee(1, "test", 18, "male", 10000);
+        Employee expected = new Employee("1", "test", 18, "male", 10000);
 
         when(employeeRepository.findById(1)).thenReturn(expected);
 
@@ -50,7 +50,7 @@ public class EmployeeServiceTest {
         //given
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
-        List<Employee> expected = Arrays.asList(new Employee(1, "test", 18, "male", 10000));
+        List<Employee> expected = Arrays.asList(new Employee("1", "test", 18, "male", 10000));
 
         when(employeeRepository.findPage(1, 1)).thenReturn(expected);
 
@@ -66,7 +66,7 @@ public class EmployeeServiceTest {
         //given
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
-        List<Employee> expected = Arrays.asList(new Employee(1, "test", 18, "male", 10000));
+        List<Employee> expected = Arrays.asList(new Employee("1", "test", 18, "male", 10000));
 
 
         when(employeeRepository.findByGender("male")).thenReturn(expected);

@@ -19,7 +19,7 @@ public class CompanyServiceTest {
         //given
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
         CompanyService companyService = new CompanyService(companyRepository);
-        List<Company> expected = Arrays.asList(new Company("test",1,Arrays.asList(new Employee(1, "test", 18, "male", 10000))));
+        List<Company> expected = Arrays.asList(new Company("test",1,Arrays.asList(new Employee("1", "test", 18, "male", 10000))));
 
         when(companyRepository.findAll()).thenReturn(expected);
 
@@ -35,7 +35,7 @@ public class CompanyServiceTest {
         //given
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
         CompanyService companyService = new CompanyService(companyRepository);
-        Company expected = new Company("test",1,Arrays.asList(new Employee(1, "test", 18, "male", 10000)));
+        Company expected = new Company("test",1,Arrays.asList(new Employee("1", "test", 18, "male", 10000)));
 
         when(companyRepository.findByIndex(0)).thenReturn(expected);
 
@@ -51,7 +51,7 @@ public class CompanyServiceTest {
         //given
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
         CompanyService companyService = new CompanyService(companyRepository);
-        List<Employee> expected = Arrays.asList(new Employee(1, "test", 18, "male", 10000));
+        List<Employee> expected = Arrays.asList(new Employee("1", "test", 18, "male", 10000));
 
         when(companyRepository.findByIndexForEmployees(0)).thenReturn(expected);
 
@@ -67,7 +67,7 @@ public class CompanyServiceTest {
         //given
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
         CompanyService companyService = new CompanyService(companyRepository);
-        List<Company> expected = Arrays.asList(new Company("test",1,Arrays.asList(new Employee(1, "test", 18, "male", 10000))));
+        List<Company> expected = Arrays.asList(new Company("test",1,Arrays.asList(new Employee("1", "test", 18, "male", 10000))));
 
         when(companyRepository.findPage(1,1)).thenReturn(expected);
 

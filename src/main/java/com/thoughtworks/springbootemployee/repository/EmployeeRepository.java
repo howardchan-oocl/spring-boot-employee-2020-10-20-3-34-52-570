@@ -49,7 +49,7 @@ public class EmployeeRepository {
 
     public Employee update(int employeeId, Employee requestEmployee) {
         int index = this.employees.indexOf(this.employees.stream()
-                .filter(employee -> employee.getId() == employeeId)
+                .filter(employee -> employee.getId().equals(employeeId))
                 .findFirst()
                 .orElse(null));
 

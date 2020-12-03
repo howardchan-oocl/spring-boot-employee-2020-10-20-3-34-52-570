@@ -30,4 +30,20 @@ public class CompanyService {
     public List<Company> findPage(int page, int pageSize) {
         return companyRepository.findPage(page,pageSize);
     }
+
+    public List<Employee> getEmployeesOfOneCompany(int index) {
+        return companyRepository.getEmployeesOfOneCompany(index);
+    }
+
+    public Company addOne(Company company) {
+        return companyRepository.addOne(company);
+    }
+
+    public Company update(Integer index, Company requestCompany) {
+        return companyRepository.update(index,requestCompany);
+    }
+
+    public boolean delete(Integer index) {
+        return companyRepository.delete(index);
+    }
 }
