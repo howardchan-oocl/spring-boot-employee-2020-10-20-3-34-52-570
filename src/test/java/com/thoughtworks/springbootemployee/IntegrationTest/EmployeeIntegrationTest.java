@@ -152,4 +152,32 @@ public class EmployeeIntegrationTest {
 
         //then
     }
+
+    @Test
+    public void should_return_a_updated_employee_when_update_given_employees() throws Exception {
+        //given
+        Employee employee = new Employee("Howard", 18, "male", 99999);
+        Employee employee2 = new Employee("Howard2", 18, "female", 99999);
+        employeeRepository.save(employee);
+        employeeRepository.save(employee2);
+        String employeeAsJson = "{\n" +
+                "    \"name\": \"Updated_Howard\",\n" +
+                "    \"age\": 18,\n" +
+                "    \"gender\": \"male\",\n" +
+                "    \"salary\": 99999\n" +
+                "}";
+
+        //when
+        mockMvc.perform(put("/employees/" + employee.getId())
+                .contentType(APPLICATION_JSON)
+                .content(employeeAsJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").isString())
+                .andExpect(jsonPath("$.name").value("Updated_Howard"))
+                .andExpect(jsonPath("$.age").value(18))
+                .andExpect(jsonPath("$.gender").value("male"))
+                .andExpect(jsonPath("$.salary").value(99999));
+
+        //then
+    }
 }
