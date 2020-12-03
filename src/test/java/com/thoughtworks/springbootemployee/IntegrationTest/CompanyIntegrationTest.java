@@ -17,8 +17,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -135,5 +134,36 @@ public class CompanyIntegrationTest {
         assertEquals(1, companies.size());
         assertEquals("test", companies.get(0).getCompanyName());
         assertEquals(1, companies.get(0).getEmployeesNumber());
+    }
+
+    @Test
+    public void should_return_a_update_company_when_update_given_companies() throws Exception {
+        //given
+        List<Employee> employees = Arrays.asList(new Employee("Howard", 18, "male", 99999));
+        Company company = new Company("test", 1, employees);
+        Company company2 = new Company("test2", 1, employees);
+
+        companyRepository.save(company);
+        companyRepository.save(company2);
+        String employeeAsJson = "{   \n" +
+                "    \"companyName\": \"testtesttest\",\n" +
+                "    \"employeesNumber\": 1,\n" +
+                "    \"employees\": [{\n" +
+                "        \"name\": \"Howard3\",\n" +
+                "        \"age\": 18,\n" +
+                "        \"gender\": \"male\",\n" +
+                "        \"salary\": 99999\n" +
+                "    }]\n" +
+                "}";
+
+        //when
+        mockMvc.perform(put("/companies/" + company.getId())
+                .contentType(APPLICATION_JSON)
+                .content(employeeAsJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.companyName").value("testtesttest"))
+                .andExpect(jsonPath("$.employeesNumber").value(1));
+
+        //then
     }
 }
