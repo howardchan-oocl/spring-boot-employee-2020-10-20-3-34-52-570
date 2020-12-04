@@ -3,6 +3,7 @@ package com.thoughtworks.springbootemployee.IntegrationTest;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
+import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -27,6 +28,9 @@ public class CompanyIntegrationTest {
     MockMvc mockMvc;
 
     @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
     private CompanyRepository companyRepository;
 
     @AfterEach
@@ -38,8 +42,12 @@ public class CompanyIntegrationTest {
     @Test
     public void should_return_all_companies_when_get_all_given_companies() throws Exception {
         //given
-        List<Employee> employees = Arrays.asList(new Employee("Howard", 18, "male", 99999));
+        Employee employee = new Employee("Howard", 18, "male", 99999);
+        List<Employee> employees = new ArrayList<>();
+        employees.add(employee);
         Company company = new Company("test", 1, employees);
+
+        employeeRepository.save(employee);
         companyRepository.save(company);
 
         //when
@@ -54,8 +62,12 @@ public class CompanyIntegrationTest {
     @Test
     public void should_return_a_company_when_get_one_given_companies() throws Exception {
         //given
-        List<Employee> employees = Arrays.asList(new Employee("Howard", 18, "male", 99999));
+        Employee employee = new Employee("Howard", 18, "male", 99999);
+        List<Employee> employees = new ArrayList<>();
+        employees.add(employee);
         Company company = new Company("test", 1, employees);
+
+        employeeRepository.save(employee);
         companyRepository.save(company);
 
         //when
@@ -69,8 +81,12 @@ public class CompanyIntegrationTest {
     @Test
     public void should_return_employees_when_employees_of_a_company_given_companies() throws Exception {
         //given
-        List<Employee> employees = Arrays.asList(new Employee("Howard", 18, "male", 99999));
+        Employee employee = new Employee("Howard", 18, "male", 99999);
+        List<Employee> employees = new ArrayList<>();
+        employees.add(employee);
         Company company = new Company("test", 1, employees);
+
+        employeeRepository.save(employee);
         companyRepository.save(company);
 
         //when
@@ -88,10 +104,13 @@ public class CompanyIntegrationTest {
     @Test
     public void should_return_page_when_get_page_given_companies() throws Exception {
         //given
-        List<Employee> employees = Arrays.asList(new Employee("Howard", 18, "male", 99999));
+        Employee employee = new Employee("Howard", 18, "male", 99999);
+        List<Employee> employees = new ArrayList<>();
+        employees.add(employee);
         Company company = new Company("test", 1, employees);
         Company company2 = new Company("test2", 1, employees);
         Company company3 = new Company("test3", 1, employees);
+        employeeRepository.save(employee);
         companyRepository.save(company);
         companyRepository.save(company2);
         companyRepository.save(company3);
@@ -111,10 +130,14 @@ public class CompanyIntegrationTest {
     @Test
     public void should_return_company_when_add_one_given_companies() throws Exception {
         //given
+        Employee employee = new Employee("Howard3", 18, "male", 99999);
+        employeeRepository.save(employee);
+
         String employeeAsJson = "{   \n" +
                 "    \"companyName\": \"test\",\n" +
                 "    \"employeesNumber\": 1,\n" +
                 "    \"employees\": [{\n" +
+                "        \"id\": \"" + employee.getId() + "\",\n" +
                 "        \"name\": \"Howard3\",\n" +
                 "        \"age\": 18,\n" +
                 "        \"gender\": \"male\",\n" +
@@ -140,15 +163,20 @@ public class CompanyIntegrationTest {
     @Test
     public void should_return_a_update_company_when_update_given_companies() throws Exception {
         //given
-        List<Employee> employees = Arrays.asList(new Employee("Howard", 18, "male", 99999));
+        Employee employee = new Employee("Howard", 18, "male", 99999);
+        List<Employee> employees = new ArrayList<>();
+        employees.add(employee);
         Company company = new Company("test", 1, employees);
         Company company2 = new Company("test2", 1, employees);
+        employeeRepository.save(employee);
         companyRepository.save(company);
         companyRepository.save(company2);
         String employeeAsJson = "{   \n" +
+                "    \"id\": \"" + company.getId() + "\",\n" +
                 "    \"companyName\": \"testtesttest\",\n" +
                 "    \"employeesNumber\": 1,\n" +
                 "    \"employees\": [{\n" +
+                "        \"id\": 123,\n" +
                 "        \"name\": \"Howard3\",\n" +
                 "        \"age\": 18,\n" +
                 "        \"gender\": \"male\",\n" +
@@ -169,9 +197,12 @@ public class CompanyIntegrationTest {
     @Test
     public void should_return_nothing_when_delete_given_companies() throws Exception {
         //given
-        List<Employee> employees = Arrays.asList(new Employee("Howard", 18, "male", 99999));
+        Employee employee = new Employee("Howard", 18, "male", 99999);
+        List<Employee> employees = new ArrayList<>();
+        employees.add(employee);
         Company company = new Company("test", 1, employees);
         Company company2 = new Company("test2", 1, employees);
+        employeeRepository.save(employee);
         companyRepository.save(company);
         companyRepository.save(company2);
 
@@ -185,8 +216,11 @@ public class CompanyIntegrationTest {
     @Test
     public void should_return_not_found_when_delete_an_invalid_company_given_companies() throws Exception {
         //given
-        List<Employee> employees = Arrays.asList(new Employee("Howard", 18, "male", 99999));
+        Employee employee = new Employee("Howard", 18, "male", 99999);
+        List<Employee> employees = new ArrayList<>();
+        employees.add(employee);
         Company company = new Company("test", 1, employees);
+        employeeRepository.save(employee);
         Company addedCompany = companyRepository.save(company);
         companyRepository.deleteById(addedCompany.getId());
 
