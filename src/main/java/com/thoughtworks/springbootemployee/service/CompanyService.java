@@ -25,12 +25,18 @@ public class CompanyService {
         return companyRepository.findAll();
     }
 
-    public Optional<Company> findById(String id) {
-        return companyRepository.findById(id);
+    public Company findById(String id) throws IdNotFoundException {
+        if (!companyRepository.existsById(id)) {
+            throw new IdNotFoundException();
+        }
+        return companyRepository.findById(id).get();
     }
 
-    public List<Employee> findByIdForEmployees(String id) {
-        return companyRepository.findById(id).isPresent() ? companyRepository.findById(id).get().getEmployees() : null;
+    public List<Employee> findByIdForEmployees(String id) throws IdNotFoundException {
+        if(!companyRepository.existsById(id)){
+            throw new IdNotFoundException();
+        }
+        return companyRepository.findById(id).get().getEmployees();
     }
 
     public Page<Company> findPage(Pageable pageable) {

@@ -1,5 +1,6 @@
 package com.thoughtworks.springbootemployee.controller;
 
+import com.thoughtworks.springbootemployee.Exception.IdNotFoundException;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.service.CompanyService;
@@ -11,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/companies")
@@ -25,14 +25,14 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Company> getOne(@PathVariable String id) {
-        Optional<Company> targetCompany = companyService.findById(id);
+    public ResponseEntity<Company> getOne(@PathVariable String id) throws IdNotFoundException {
+        Company targetCompany = companyService.findById(id);
 
-        return targetCompany.isPresent() ? ResponseEntity.ok(targetCompany.get()) : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(targetCompany);
     }
 
     @GetMapping("/{id}/employees")
-    public ResponseEntity<List<Employee>> getEmployeesOfOneCompany(@PathVariable String id) {
+    public ResponseEntity<List<Employee>> getEmployeesOfOneCompany(@PathVariable String id) throws IdNotFoundException {
         List<Employee> employees = companyService.findByIdForEmployees(id);
         return ResponseEntity.ok(employees);
     }
@@ -61,12 +61,8 @@ public class CompanyController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable String id) {
-        try {
-            companyService.delete(id);
-            return ResponseEntity.noContent().build();
-        } catch (Exception exception) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> delete(@PathVariable String id) throws IdNotFoundException {
+        companyService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

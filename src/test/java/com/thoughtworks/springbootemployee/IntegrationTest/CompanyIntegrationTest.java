@@ -187,13 +187,12 @@ public class CompanyIntegrationTest {
         //given
         List<Employee> employees = Arrays.asList(new Employee("Howard", 18, "male", 99999));
         Company company = new Company("test", 1, employees);
-        Company company2 = new Company("test2", 1, employees);
-        companyRepository.save(company);
-        companyRepository.save(company2);
+        Company addedCompany = companyRepository.save(company);
+        companyRepository.deleteById(addedCompany.getId());
 
         //when
         //then
-        mockMvc.perform(delete("/companies/1"))
+        mockMvc.perform(delete("/companies/" + addedCompany.getId()))
                 .andExpect(status().isNotFound());
     }
 }

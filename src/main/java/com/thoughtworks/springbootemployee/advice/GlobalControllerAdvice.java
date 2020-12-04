@@ -16,7 +16,7 @@ public class GlobalControllerAdvice {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({IdNotFoundException.class})
-    public ErrorResponse handleBadRequest(IdNotFoundException exception) {
+    public ErrorResponse handleIdNotFoundException(IdNotFoundException exception) {
         return new ErrorResponse(exception.getMessage(), HttpStatus.NOT_FOUND.name());
     }
 }

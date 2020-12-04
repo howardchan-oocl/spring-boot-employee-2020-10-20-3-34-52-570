@@ -46,32 +46,62 @@ public class CompanyServiceTest {
     }
 
     @Test
-    public void should_return_a_company_when_get_by_id_given_all_companies() {
+    public void should_return_a_company_when_get_by_id_given_all_companies() throws IdNotFoundException {
         //given
-        Optional<Company> expected = Optional.of(new Company("test", 1, Arrays.asList(new Employee("test", 18, "male", 10000))));
+        Company expected = new Company("test", 1, Arrays.asList(new Employee("test", 18, "male", 10000)));
 
-        when(companyRepository.findById("1")).thenReturn(expected);
+        when(companyRepository.existsById("1")).thenReturn(true);
+        when(companyRepository.findById("1")).thenReturn(Optional.of(expected));
 
         //when
-        Optional<Company> company = companyService.findById("1");
+        Company company = companyService.findById("1");
 
         //then
         assertEquals(expected, company);
     }
 
     @Test
-    public void should_return_a_list_of_employees_when_get_by_index_for_employees_given_all_companies() {
+    public void should_throw_exception_when_get_by_an_invalid_id_given_all_companies() {
         //given
-        List<Employee> expected = Arrays.asList(new Employee("test", 18, "male", 10000));
-        Optional<Company> company = Optional.of(new Company("test", 1, expected));
+        Company expected = new Company("test", 1, Arrays.asList(new Employee("test", 18, "male", 10000)));
 
-        when(companyRepository.findById("1")).thenReturn(company);
+        when(companyRepository.existsById("1")).thenReturn(false);
 
         //when
-        List<Employee> employees = companyService.findById("1").get().getEmployees();
+        IdNotFoundException idNotFoundException = assertThrows(IdNotFoundException.class, () -> companyService.findById("1"));
+
+        //then
+        assertEquals("ID NOT FOUND ERROR", idNotFoundException.getMessage());
+    }
+
+    @Test
+    public void should_return_a_list_of_employees_when_get_by_index_for_employees_given_all_companies() throws IdNotFoundException {
+        //given
+        List<Employee> expected = Arrays.asList(new Employee("test", 18, "male", 10000));
+        Company company = new Company("test", 1, expected);
+
+        when(companyRepository.existsById("1")).thenReturn(true);
+        when(companyRepository.findById("1")).thenReturn(Optional.of(company));
+
+        //when
+        List<Employee> employees = companyService.findByIdForEmployees("1");
 
         //then
         assertEquals(expected, employees);
+    }
+
+    @Test
+    public void should_throw_exception_when_get_by_invalid_index_given_all_companies() throws IdNotFoundException {
+        //given
+        Company expected = new Company("test", 1, Arrays.asList(new Employee("test", 18, "male", 10000)));
+
+        when(companyRepository.existsById("1")).thenReturn(false);
+
+        //when
+        IdNotFoundException idNotFoundException = assertThrows(IdNotFoundException.class, () -> companyService.findByIdForEmployees("1"));
+
+        //then
+        assertEquals("ID NOT FOUND ERROR", idNotFoundException.getMessage());
     }
 
     @Test
