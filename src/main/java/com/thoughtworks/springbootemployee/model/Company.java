@@ -1,10 +1,10 @@
 package com.thoughtworks.springbootemployee.model;
 
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Document
@@ -13,8 +13,9 @@ public class Company {
     private String id;
     private String companyName;
     private Integer employeesNumber;
-    //todo change employee to employeeId
-    private List<Employee> employees = new ArrayList<>();
+    @DBRef
+    private List<Employee> employees;
+
 
     public Company() {
 

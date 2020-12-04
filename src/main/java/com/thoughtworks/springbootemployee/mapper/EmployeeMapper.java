@@ -1,6 +1,5 @@
 package com.thoughtworks.springbootemployee.mapper;
 
-import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.thoughtworks.springbootemployee.dto.EmployeeRequest;
 import com.thoughtworks.springbootemployee.dto.EmployeeResponse;
 import com.thoughtworks.springbootemployee.model.Employee;

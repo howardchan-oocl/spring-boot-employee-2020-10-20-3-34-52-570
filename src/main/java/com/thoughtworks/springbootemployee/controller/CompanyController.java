@@ -1,6 +1,10 @@
 package com.thoughtworks.springbootemployee.controller;
 
+import com.thoughtworks.springbootemployee.dto.CompanyResponse;
+import com.thoughtworks.springbootemployee.dto.EmployeeResponse;
 import com.thoughtworks.springbootemployee.exception.IdNotFoundException;
+import com.thoughtworks.springbootemployee.mapper.CompanyMapper;
+import com.thoughtworks.springbootemployee.mapper.EmployeeMapper;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.service.CompanyService;
@@ -12,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/companies")
@@ -19,42 +24,42 @@ public class CompanyController {
     @Autowired
     private CompanyService companyService;
 
+    @Autowired
+    private CompanyMapper companyMapper;
+
+    @Autowired
+    private EmployeeMapper employeeMapper;
+
     @GetMapping
-    public ResponseEntity<List<Company>> getAll() {
-        return ResponseEntity.ok(companyService.findAll());
+    public List<CompanyResponse> getAll() {
+        return companyService.findAll().stream().map(companyMapper::toResponse).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Company> getOne(@PathVariable String id) throws IdNotFoundException {
-        Company targetCompany = companyService.findById(id);
-
-        return ResponseEntity.ok(targetCompany);
+    public CompanyResponse getOne(@PathVariable String id) throws IdNotFoundException {
+        return companyMapper.toResponse(companyService.findById(id));
     }
 
     @GetMapping("/{id}/employees")
-    public ResponseEntity<List<Employee>> getEmployeesOfOneCompany(@PathVariable String id) throws IdNotFoundException {
-        List<Employee> employees = companyService.findByIdForEmployees(id);
-        return ResponseEntity.ok(employees);
+    public List<EmployeeResponse> getEmployeesOfOneCompany(@PathVariable String id) throws IdNotFoundException {
+        return companyService.findByIdForEmployees(id).stream().map(employeeMapper::toResponse).collect(Collectors.toList());
     }
 
     @GetMapping(params = {"page", "pageSize"})
-    public ResponseEntity<List<Company>> getAllWithPagination(@RequestParam("page") Integer pageIndex, @RequestParam("pageSize") Integer pageSize) {
-        Page<Company> companies = this.companyService.findPage(PageRequest.of(pageIndex, pageSize));
-
-        return ResponseEntity.ok(companies.getContent());
+    public List<CompanyResponse> getAllWithPagination(@RequestParam("page") Integer pageIndex, @RequestParam("pageSize") Integer pageSize) {
+        return companyService.findPage(PageRequest.of(pageIndex, pageSize)).stream().map(companyMapper::toResponse).collect(Collectors.toList());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Company create(@RequestBody Company company) {
-        return companyService.addOne(company);
+    public CompanyResponse create(@RequestBody Company company) {
+        return companyMapper.toResponse(companyService.addOne(company));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Company> update(@PathVariable String id, @RequestBody Company requestCompany) {
+    public ResponseEntity<CompanyResponse> update(@PathVariable String id, @RequestBody Company requestCompany) {
         try {
-            Company company = companyService.update(id, requestCompany);
-            return ResponseEntity.ok(company);
+            return ResponseEntity.ok(companyMapper.toResponse(companyService.update(id, requestCompany)));
         } catch (Exception exception) {
             return ResponseEntity.notFound().build();
         }
