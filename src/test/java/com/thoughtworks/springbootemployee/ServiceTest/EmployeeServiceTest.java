@@ -47,15 +47,30 @@ public class EmployeeServiceTest {
     @Test
     public void should_return_a_employee_when_get_one_given_all_employees() throws IdNotFoundException {
         //given
-        Optional<Employee> expected = Optional.of(new Employee("test", 18, "male", 10000));
+        Employee expected = new Employee("test", 18, "male", 10000);
 
-        when(employeeRepository.findById("1")).thenReturn(expected);
+        when(employeeRepository.existsById("1")).thenReturn(true);
+        when(employeeRepository.findById("1")).thenReturn(Optional.of(expected));
 
         //when
         Employee employee = employeeService.findById("1");
 
         //then
         assertEquals(expected, employee);
+    }
+
+    @Test
+    public void should_throw_exception_when_get_by_an_invalid_id_given_all_employees() {
+        //given
+        Employee expected = new Employee("test", 18, "male", 10000);
+
+        when(employeeRepository.existsById("1")).thenReturn(false);
+
+        //when
+        IdNotFoundException idNotFoundException = assertThrows(IdNotFoundException.class, () -> employeeService.findById("1"));
+
+        //then
+        assertEquals("ID NOT FOUND ERROR", idNotFoundException.getMessage());
     }
 
     @Test
