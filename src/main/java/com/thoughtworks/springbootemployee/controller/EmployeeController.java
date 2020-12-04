@@ -1,5 +1,8 @@
 package com.thoughtworks.springbootemployee.controller;
 
+import com.thoughtworks.springbootemployee.Exception.IdNotFoundException;
+import com.thoughtworks.springbootemployee.dto.EmployeeResponse;
+import com.thoughtworks.springbootemployee.mapper.EmployeeMapper;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/employees")
@@ -18,55 +21,49 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
+    @Autowired
+    private EmployeeMapper employeeMapper;
+
     @GetMapping
-    public ResponseEntity<List<Employee>> getAll() {
-        return ResponseEntity.ok(employeeService.findAll());
+    public List<EmployeeResponse> getAll() {
+        return employeeService.findAll().stream().map(employeeMapper::toResponse).collect(Collectors.toList());
     }
 
     @GetMapping("/{employeeId}")
-    public ResponseEntity<Employee> getOne(@PathVariable String employeeId) {
-        Optional<Employee> employee = employeeService.findById(employeeId);
-
-        return employee.isPresent() ? ResponseEntity.ok(employee.get()) : ResponseEntity.notFound().build();
+    public EmployeeResponse getOne(@PathVariable String employeeId) throws IdNotFoundException {
+        return employeeMapper.toResponse(employeeService.findById(employeeId));
     }
 
     @GetMapping(params = {"page", "pageSize"})
-    public ResponseEntity<List<Employee>> getAllWithPagination(@RequestParam("page") Integer pageIndex, @RequestParam("pageSize") Integer pageSize) {
+    public List<EmployeeResponse> getAllWithPagination(@RequestParam("page") Integer pageIndex, @RequestParam("pageSize") Integer pageSize) {
         Page<Employee> employees = employeeService.findPage(PageRequest.of(pageIndex, pageSize));
 
-        return ResponseEntity.ok(employees.getContent());
+        return employees.getContent().stream().map(employeeMapper::toResponse).collect(Collectors.toList());
     }
 
     @GetMapping(params = {"gender"})
-    public ResponseEntity<List<Employee>> getAllWithGender(@RequestParam("gender") String gender) {
-        List<Employee> employees = employeeService.findByGender(gender);
-
-        return ResponseEntity.ok(employees);
+    public List<EmployeeResponse> getAllWithGender(@RequestParam("gender") String gender) {
+        return employeeService.findByGender(gender).stream().map(employeeMapper::toResponse).collect(Collectors.toList());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Employee create(@RequestBody Employee employee) {
-        return employeeService.addOne(employee);
+    public EmployeeResponse create(@RequestBody Employee employee) {
+        return employeeMapper.toResponse(employeeService.addOne(employee));
     }
 
     @PutMapping("/{employeeId}")
-    public ResponseEntity<Employee> update(@PathVariable String employeeId, @RequestBody Employee requestEmployee) {
+    public ResponseEntity<EmployeeResponse> update(@PathVariable String employeeId, @RequestBody Employee requestEmployee) {
         try {
-            Employee employee = employeeService.update(employeeId, requestEmployee);
-            return ResponseEntity.ok(employee);
+            return ResponseEntity.ok(employeeMapper.toResponse(employeeService.update(employeeId, requestEmployee)));
         } catch (Exception exception) {
             return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping("/{employeeId}")
-    public ResponseEntity<Void> delete(@PathVariable String employeeId) {
-        try {
-            employeeService.delete(employeeId);
-            return ResponseEntity.noContent().build();
-        } catch (Exception exception) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> delete(@PathVariable String employeeId) throws IdNotFoundException {
+        employeeService.delete(employeeId);
+        return ResponseEntity.noContent().build();
     }
 }

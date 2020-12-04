@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EmployeeService {
@@ -24,8 +23,11 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
-    public Optional<Employee> findById(String id) {
-        return employeeRepository.findById(id);
+    public Employee findById(String id) throws IdNotFoundException {
+        if (!employeeRepository.existsById(id)){
+            throw new IdNotFoundException();
+        }
+        return employeeRepository.findById(id).get();
     }
 
     public Page<Employee> findPage(Pageable pageable) {

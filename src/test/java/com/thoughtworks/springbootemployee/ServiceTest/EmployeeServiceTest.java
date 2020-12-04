@@ -45,14 +45,14 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void should_return_a_employee_when_get_one_given_all_employees() {
+    public void should_return_a_employee_when_get_one_given_all_employees() throws IdNotFoundException {
         //given
         Optional<Employee> expected = Optional.of(new Employee("test", 18, "male", 10000));
 
         when(employeeRepository.findById("1")).thenReturn(expected);
 
         //when
-        Optional<Employee> employee = employeeService.findById("1");
+        Employee employee = employeeService.findById("1");
 
         //then
         assertEquals(expected, employee);
