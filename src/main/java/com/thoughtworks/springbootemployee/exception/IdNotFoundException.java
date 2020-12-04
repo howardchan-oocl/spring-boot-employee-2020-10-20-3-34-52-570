@@ -1,4 +1,4 @@
-package com.thoughtworks.springbootemployee.Exception;
+package com.thoughtworks.springbootemployee.exception;
 
 public class IdNotFoundException extends Exception {
     public IdNotFoundException(){

@@ -1,6 +1,6 @@
 package com.thoughtworks.springbootemployee.ServiceTest;
 
-import com.thoughtworks.springbootemployee.Exception.IdNotFoundException;
+import com.thoughtworks.springbootemployee.exception.IdNotFoundException;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import com.thoughtworks.springbootemployee.service.EmployeeService;

@@ -1,6 +1,6 @@
 package com.thoughtworks.springbootemployee.advice;
 
-import com.thoughtworks.springbootemployee.Exception.IdNotFoundException;
+import com.thoughtworks.springbootemployee.exception.IdNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
