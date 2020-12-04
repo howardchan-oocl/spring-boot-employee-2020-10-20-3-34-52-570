@@ -41,6 +41,7 @@ public class EmployeeIntegrationTest {
         //when
         mockMvc.perform(get("/employees"))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].id").isString())
                 .andExpect(jsonPath("$[0].name").value("Howard"))
                 .andExpect(jsonPath("$[0].age").value(18))

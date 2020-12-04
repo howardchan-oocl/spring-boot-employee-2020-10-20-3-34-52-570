@@ -34,6 +34,7 @@ public class CompanyIntegrationTest {
         companyRepository.deleteAll();
     }
 
+    //fix comparison issue
     @Test
     public void should_return_all_companies_when_get_all_given_companies() throws Exception {
         //given
@@ -44,6 +45,7 @@ public class CompanyIntegrationTest {
         //when
         mockMvc.perform(get("/companies"))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].companyName").value("test"))
                 .andExpect(jsonPath("$[0].employeesNumber").value(1));
         //then
@@ -74,6 +76,7 @@ public class CompanyIntegrationTest {
         //when
         mockMvc.perform(get("/companies/" + company.getId() + "/employees"))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name").value("Howard"))
                 .andExpect(jsonPath("$[0].age").value(18))
                 .andExpect(jsonPath("$[0].gender").value("male"))
@@ -154,14 +157,13 @@ public class CompanyIntegrationTest {
                 "}";
 
         //when
+        //then
         mockMvc.perform(put("/companies/" + company.getId())
                 .contentType(APPLICATION_JSON)
                 .content(employeeAsJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.companyName").value("testtesttest"))
                 .andExpect(jsonPath("$.employeesNumber").value(1));
-
-        //then
     }
 
     @Test
@@ -174,10 +176,10 @@ public class CompanyIntegrationTest {
         companyRepository.save(company2);
 
         //when
+        //then
         mockMvc.perform(delete("/companies/" + company.getId()))
                 .andExpect(status().isNoContent());
-
-        //then
+        assertEquals(1, companyRepository.findAll().size());
     }
 
     @Test
@@ -190,9 +192,8 @@ public class CompanyIntegrationTest {
         companyRepository.save(company2);
 
         //when
+        //then
         mockMvc.perform(delete("/companies/1"))
                 .andExpect(status().isNotFound());
-
-        //then
     }
 }

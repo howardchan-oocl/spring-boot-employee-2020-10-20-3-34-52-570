@@ -1,16 +1,20 @@
 package com.thoughtworks.springbootemployee.model;
 
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Document
 public class Company {
     @MongoId(FieldType.OBJECT_ID)
     private String id;
     private String companyName;
     private Integer employeesNumber;
-    private List<Employee> employees;
+    //todo change employee to employeeId
+    private List<Employee> employees = new ArrayList<>();
 
     public Company() {
 
