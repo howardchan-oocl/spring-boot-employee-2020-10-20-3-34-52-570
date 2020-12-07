@@ -45,4 +45,16 @@ public class Company {
     public String getId() {
         return id;
     }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public void setEmployeesNumber(Integer employeesNumber) {
+        this.employeesNumber = employeesNumber;
+    }
+
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
+    }
 }

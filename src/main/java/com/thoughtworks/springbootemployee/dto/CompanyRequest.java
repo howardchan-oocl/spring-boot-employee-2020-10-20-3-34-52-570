@@ -36,4 +36,20 @@ public class CompanyRequest {
     public List<Employee> getEmployees() {
         return employees;
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public void setEmployeesNumber(Integer employeesNumber) {
+        this.employeesNumber = employeesNumber;
+    }
+
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
+    }
 }

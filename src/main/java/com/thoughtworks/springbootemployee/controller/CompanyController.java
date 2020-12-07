@@ -1,5 +1,6 @@
 package com.thoughtworks.springbootemployee.controller;
 
+import com.thoughtworks.springbootemployee.dto.CompanyRequest;
 import com.thoughtworks.springbootemployee.dto.CompanyResponse;
 import com.thoughtworks.springbootemployee.dto.EmployeeResponse;
 import com.thoughtworks.springbootemployee.exception.IdNotFoundException;
@@ -57,9 +58,9 @@ public class CompanyController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CompanyResponse> update(@PathVariable String id, @RequestBody Company requestCompany) {
+    public ResponseEntity<CompanyResponse> update(@PathVariable String id, @RequestBody CompanyRequest requestCompany) {
         try {
-            return ResponseEntity.ok(companyMapper.toResponse(companyService.update(id, requestCompany)));
+            return ResponseEntity.ok(companyMapper.toResponse(companyService.update(id, companyMapper.toEntity(requestCompany))));
         } catch (Exception exception) {
             return ResponseEntity.notFound().build();
         }

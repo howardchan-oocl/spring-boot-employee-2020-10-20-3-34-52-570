@@ -34,4 +34,24 @@ public class EmployeeRequest {
     public Integer getSalary() {
         return salary;
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setSalary(Integer salary) {
+        this.salary = salary;
+    }
 }
