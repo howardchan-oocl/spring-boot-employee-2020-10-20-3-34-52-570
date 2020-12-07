@@ -1,8 +1,8 @@
 package com.thoughtworks.springbootemployee.controller;
 
 import com.thoughtworks.springbootemployee.dto.EmployeeRequest;
-import com.thoughtworks.springbootemployee.exception.IdNotFoundException;
 import com.thoughtworks.springbootemployee.dto.EmployeeResponse;
+import com.thoughtworks.springbootemployee.exception.EmployeeIdNotFoundException;
 import com.thoughtworks.springbootemployee.mapper.EmployeeMapper;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.service.EmployeeService;
@@ -31,7 +31,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{employeeId}")
-    public EmployeeResponse getOne(@PathVariable String employeeId) throws IdNotFoundException {
+    public EmployeeResponse getOne(@PathVariable String employeeId) throws EmployeeIdNotFoundException {
         return employeeMapper.toResponse(employeeService.findById(employeeId));
     }
 
@@ -57,13 +57,13 @@ public class EmployeeController {
     public ResponseEntity<EmployeeResponse> update(@PathVariable String employeeId, @RequestBody EmployeeRequest requestEmployee) {
         try {
             return ResponseEntity.ok(employeeMapper.toResponse(employeeService.update(employeeId, employeeMapper.toEntity(requestEmployee))));
-        } catch (Exception exception) {
+        } catch (EmployeeIdNotFoundException exception) {
             return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping("/{employeeId}")
-    public ResponseEntity<Void> delete(@PathVariable String employeeId) throws IdNotFoundException {
+    public ResponseEntity<Void> delete(@PathVariable String employeeId) throws EmployeeIdNotFoundException {
         employeeService.delete(employeeId);
         return ResponseEntity.noContent().build();
     }

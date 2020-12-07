@@ -1,6 +1,6 @@
 package com.thoughtworks.springbootemployee.service;
 
-import com.thoughtworks.springbootemployee.exception.IdNotFoundException;
+import com.thoughtworks.springbootemployee.exception.EmployeeIdNotFoundException;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +23,9 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
-    public Employee findById(String id) throws IdNotFoundException {
-        if (!employeeRepository.existsById(id)){
-            throw new IdNotFoundException();
+    public Employee findById(String id) throws EmployeeIdNotFoundException {
+        if (!employeeRepository.existsById(id)) {
+            throw new EmployeeIdNotFoundException();
         }
         return employeeRepository.findById(id).get();
     }
@@ -42,19 +42,24 @@ public class EmployeeService {
         return employeeRepository.insert(employee);
     }
 
-    public Employee update(String employeeId, Employee requestEmployee) throws IdNotFoundException {
+    public Employee update(String employeeId, Employee requestEmployee) throws EmployeeIdNotFoundException {
         if (employeeRepository.existsById(employeeId)) {
             requestEmployee.setId(employeeId);
             return employeeRepository.save(requestEmployee);
         }
-        throw new IdNotFoundException();
+        throw new EmployeeIdNotFoundException();
     }
 
-    public boolean delete(String employeeId) throws IdNotFoundException {
+    public boolean delete(String employeeId) throws EmployeeIdNotFoundException {
         if (employeeRepository.existsById(employeeId)) {
             employeeRepository.deleteById(employeeId);
             return true;
         }
-        throw new IdNotFoundException();
+        throw new EmployeeIdNotFoundException();
     }
+
+    public boolean IsEmployeeExist(String id) {
+        return employeeRepository.existsById(id);
+    }
+
 }

@@ -1,6 +1,6 @@
 package com.thoughtworks.springbootemployee.ServiceTest;
 
-import com.thoughtworks.springbootemployee.exception.IdNotFoundException;
+import com.thoughtworks.springbootemployee.exception.CompanyIdNotFoundException;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
@@ -46,7 +46,7 @@ public class CompanyServiceTest {
     }
 
     @Test
-    public void should_return_a_company_when_get_by_id_given_all_companies() throws IdNotFoundException {
+    public void should_return_a_company_when_get_by_id_given_all_companies() throws CompanyIdNotFoundException {
         //given
         Company expected = new Company("test", 1, Arrays.asList(new Employee("test", 18, "male", 10000)));
 
@@ -68,14 +68,14 @@ public class CompanyServiceTest {
         when(companyRepository.existsById("1")).thenReturn(false);
 
         //when
-        IdNotFoundException idNotFoundException = assertThrows(IdNotFoundException.class, () -> companyService.findById("1"));
+        CompanyIdNotFoundException companyIdNotFoundException = assertThrows(CompanyIdNotFoundException.class, () -> companyService.findById("1"));
 
         //then
-        assertEquals("ID NOT FOUND ERROR", idNotFoundException.getMessage());
+        assertEquals("COMPANY ID NOT FOUND ERROR", companyIdNotFoundException.getMessage());
     }
 
     @Test
-    public void should_return_a_list_of_employees_when_get_by_index_for_employees_given_all_companies() throws IdNotFoundException {
+    public void should_return_a_list_of_employees_when_get_by_index_for_employees_given_all_companies() throws CompanyIdNotFoundException {
         //given
         List<Employee> expected = Arrays.asList(new Employee("test", 18, "male", 10000));
         Company company = new Company("test", 1, expected);
@@ -91,17 +91,17 @@ public class CompanyServiceTest {
     }
 
     @Test
-    public void should_throw_exception_when_get_by_invalid_index_given_all_companies() throws IdNotFoundException {
+    public void should_throw_exception_when_get_by_invalid_index_given_all_companies() {
         //given
         Company expected = new Company("test", 1, Arrays.asList(new Employee("test", 18, "male", 10000)));
 
         when(companyRepository.existsById("1")).thenReturn(false);
 
         //when
-        IdNotFoundException idNotFoundException = assertThrows(IdNotFoundException.class, () -> companyService.findByIdForEmployees("1"));
+        CompanyIdNotFoundException companyIdNotFoundException = assertThrows(CompanyIdNotFoundException.class, () -> companyService.findByIdForEmployees("1"));
 
         //then
-        assertEquals("ID NOT FOUND ERROR", idNotFoundException.getMessage());
+        assertEquals("COMPANY ID NOT FOUND ERROR", companyIdNotFoundException.getMessage());
     }
 
     @Test
@@ -134,7 +134,7 @@ public class CompanyServiceTest {
     }
 
     @Test
-    public void should_return_an_employee_when_update() throws IdNotFoundException {
+    public void should_return_an_employee_when_update() throws CompanyIdNotFoundException {
         //given
         Company expected = new Company("test", 1, Arrays.asList(new Employee("test", 18, "male", 10000)));
 
@@ -149,7 +149,7 @@ public class CompanyServiceTest {
     }
 
     @Test
-    public void should_delete_an_employee_when_delete() throws IdNotFoundException {
+    public void should_delete_an_employee_when_delete() throws CompanyIdNotFoundException {
         //given
 
         when(companyRepository.existsById("1")).thenReturn(true);
@@ -168,9 +168,9 @@ public class CompanyServiceTest {
         when(companyRepository.existsById("1")).thenReturn(false);
 
         //when
-        IdNotFoundException idNotFoundException = assertThrows(IdNotFoundException.class, () -> companyService.delete("1"));
+        CompanyIdNotFoundException companyIdNotFoundException = assertThrows(CompanyIdNotFoundException.class, () -> companyService.delete("1"));
 
         //Then
-        assertEquals("ID NOT FOUND ERROR", idNotFoundException.getMessage());
+        assertEquals("COMPANY ID NOT FOUND ERROR", companyIdNotFoundException.getMessage());
     }
 }

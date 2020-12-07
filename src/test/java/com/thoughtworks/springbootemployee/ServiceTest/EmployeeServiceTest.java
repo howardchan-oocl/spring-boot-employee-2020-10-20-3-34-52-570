@@ -1,6 +1,6 @@
 package com.thoughtworks.springbootemployee.ServiceTest;
 
-import com.thoughtworks.springbootemployee.exception.IdNotFoundException;
+import com.thoughtworks.springbootemployee.exception.EmployeeIdNotFoundException;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import com.thoughtworks.springbootemployee.service.EmployeeService;
@@ -45,7 +45,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void should_return_a_employee_when_get_one_given_all_employees() throws IdNotFoundException {
+    public void should_return_a_employee_when_get_one_given_all_employees() throws EmployeeIdNotFoundException {
         //given
         Employee expected = new Employee("test", 18, "male", 10000);
 
@@ -67,10 +67,10 @@ public class EmployeeServiceTest {
         when(employeeRepository.existsById("1")).thenReturn(false);
 
         //when
-        IdNotFoundException idNotFoundException = assertThrows(IdNotFoundException.class, () -> employeeService.findById("1"));
+        EmployeeIdNotFoundException employeeIdNotFoundException = assertThrows(EmployeeIdNotFoundException.class, () -> employeeService.findById("1"));
 
         //then
-        assertEquals("ID NOT FOUND ERROR", idNotFoundException.getMessage());
+        assertEquals("EMPLOYEE ID NOT FOUND ERROR", employeeIdNotFoundException.getMessage());
     }
 
     @Test
@@ -119,7 +119,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void should_return_an_employee_when_update() throws IdNotFoundException {
+    public void should_return_an_employee_when_update() throws EmployeeIdNotFoundException {
         //given
         Employee expected = new Employee("test", 18, "male", 10000);
 
@@ -134,7 +134,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void should_delete_an_employee_when_delete() throws IdNotFoundException {
+    public void should_delete_an_employee_when_delete() throws EmployeeIdNotFoundException {
         //given
 
         when(employeeRepository.existsById("1")).thenReturn(true);
@@ -153,9 +153,9 @@ public class EmployeeServiceTest {
         when(employeeRepository.existsById("1")).thenReturn(false);
 
         //when
-        IdNotFoundException idNotFoundException = assertThrows(IdNotFoundException.class, () -> employeeService.delete("1"));
+        EmployeeIdNotFoundException employeeIdNotFoundException = assertThrows(EmployeeIdNotFoundException.class, () -> employeeService.delete("1"));
 
         //Then
-        assertEquals("ID NOT FOUND ERROR", idNotFoundException.getMessage());
+        assertEquals("EMPLOYEE ID NOT FOUND ERROR", employeeIdNotFoundException.getMessage());
     }
 }

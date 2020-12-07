@@ -16,7 +16,6 @@ public class Company {
     @DBRef
     private List<Employee> employees;
 
-
     public Company() {
 
     }

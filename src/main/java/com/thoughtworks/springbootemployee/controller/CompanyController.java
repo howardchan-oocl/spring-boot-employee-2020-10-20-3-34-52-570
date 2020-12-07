@@ -3,14 +3,14 @@ package com.thoughtworks.springbootemployee.controller;
 import com.thoughtworks.springbootemployee.dto.CompanyRequest;
 import com.thoughtworks.springbootemployee.dto.CompanyResponse;
 import com.thoughtworks.springbootemployee.dto.EmployeeResponse;
-import com.thoughtworks.springbootemployee.exception.IdNotFoundException;
+import com.thoughtworks.springbootemployee.exception.CompanyIdNotFoundException;
+import com.thoughtworks.springbootemployee.exception.EmployeeIdNotFoundException;
 import com.thoughtworks.springbootemployee.mapper.CompanyMapper;
 import com.thoughtworks.springbootemployee.mapper.EmployeeMapper;
 import com.thoughtworks.springbootemployee.model.Company;
-import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.service.CompanyService;
+import com.thoughtworks.springbootemployee.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +26,9 @@ public class CompanyController {
     private CompanyService companyService;
 
     @Autowired
+    private EmployeeService employeeService;
+
+    @Autowired
     private CompanyMapper companyMapper;
 
     @Autowired
@@ -37,12 +40,12 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}")
-    public CompanyResponse getOne(@PathVariable String id) throws IdNotFoundException {
+    public CompanyResponse getOne(@PathVariable String id) throws CompanyIdNotFoundException {
         return companyMapper.toResponse(companyService.findById(id));
     }
 
     @GetMapping("/{id}/employees")
-    public List<EmployeeResponse> getEmployeesOfOneCompany(@PathVariable String id) throws IdNotFoundException {
+    public List<EmployeeResponse> getEmployeesOfOneCompany(@PathVariable String id) throws CompanyIdNotFoundException {
         return companyService.findByIdForEmployees(id).stream().map(employeeMapper::toResponse).collect(Collectors.toList());
     }
 
@@ -60,14 +63,17 @@ public class CompanyController {
     @PutMapping("/{id}")
     public ResponseEntity<CompanyResponse> update(@PathVariable String id, @RequestBody CompanyRequest requestCompany) {
         try {
+            if (requestCompany.getEmployees().stream().anyMatch(employee -> employee.getId().equals(id))) {
+                throw new EmployeeIdNotFoundException();
+            }
             return ResponseEntity.ok(companyMapper.toResponse(companyService.update(id, companyMapper.toEntity(requestCompany))));
-        } catch (Exception exception) {
+        } catch (CompanyIdNotFoundException | EmployeeIdNotFoundException exception) {
             return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable String id) throws IdNotFoundException {
+    public ResponseEntity<Void> delete(@PathVariable String id) throws CompanyIdNotFoundException {
         companyService.delete(id);
         return ResponseEntity.noContent().build();
     }

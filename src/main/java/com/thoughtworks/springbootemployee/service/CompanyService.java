@@ -1,6 +1,6 @@
 package com.thoughtworks.springbootemployee.service;
 
-import com.thoughtworks.springbootemployee.exception.IdNotFoundException;
+import com.thoughtworks.springbootemployee.exception.CompanyIdNotFoundException;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
@@ -24,16 +24,16 @@ public class CompanyService {
         return companyRepository.findAll();
     }
 
-    public Company findById(String id) throws IdNotFoundException {
+    public Company findById(String id) throws CompanyIdNotFoundException {
         if (!companyRepository.existsById(id)) {
-            throw new IdNotFoundException();
+            throw new CompanyIdNotFoundException();
         }
         return companyRepository.findById(id).get();
     }
 
-    public List<Employee> findByIdForEmployees(String id) throws IdNotFoundException {
-        if(!companyRepository.existsById(id)){
-            throw new IdNotFoundException();
+    public List<Employee> findByIdForEmployees(String id) throws CompanyIdNotFoundException {
+        if (!companyRepository.existsById(id)) {
+            throw new CompanyIdNotFoundException();
         }
         return companyRepository.findById(id).get().getEmployees();
     }
@@ -46,19 +46,19 @@ public class CompanyService {
         return companyRepository.insert(company);
     }
 
-    public Company update(String id, Company requestCompany) throws IdNotFoundException {
+    public Company update(String id, Company requestCompany) throws CompanyIdNotFoundException {
         if (companyRepository.existsById(id)) {
             requestCompany.setId(id);
             return companyRepository.save(requestCompany);
         }
-        throw new IdNotFoundException();
+        throw new CompanyIdNotFoundException();
     }
 
-    public boolean delete(String id) throws IdNotFoundException {
+    public boolean delete(String id) throws CompanyIdNotFoundException {
         if (companyRepository.existsById(id)) {
             companyRepository.deleteById(id);
             return true;
         }
-        throw new IdNotFoundException();
+        throw new CompanyIdNotFoundException();
     }
 }
